@@ -1,0 +1,27 @@
+{
+  "name": "yunbi-node",
+  "version": "0.1.0",
+  "description": "Node SDK for yunbi",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SuperDBJ/yunbi-node.git"
+  },
+  "keywords": [
+    "yunbi"
+  ],
+  "author": "SuperDBJ",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SuperDBJ/yunbi-node/issues"
+  },
+  "homepage": "https://github.com/SuperDBJ/yunbi-node#readme",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1"
+  }
+}
