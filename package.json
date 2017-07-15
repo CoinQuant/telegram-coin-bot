@@ -10,9 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/SuperDBJ/yunbi-node.git"
   },
-  "keywords": [
-    "yunbi"
-  ],
+  "keywords": ["yunbi"],
   "author": "SuperDBJ",
   "license": "MIT",
   "bugs": {
@@ -20,8 +18,8 @@
   },
   "homepage": "https://github.com/SuperDBJ/yunbi-node#readme",
   "dependencies": {
-    "axios": "^0.16.2",
     "lodash": "^4.17.4",
-    "moment": "^2.18.1"
+    "moment": "^2.18.1",
+    "urllib": "^2.22.0"
   }
 }
