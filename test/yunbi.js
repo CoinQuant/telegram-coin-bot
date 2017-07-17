@@ -95,10 +95,10 @@ describe('node-yunbi', () => {
     it('should work with parameter option.bids_limit', done => {
       const Yunbi = require('../index')();
       Yunbi.getOrderbook('anscny', {
-        bids_limit: 2,
-        asks_limit: 1
+        bids_limit: 1,
+        asks_limit: 2
       }).then(res => {
-        assert.equal(res.bids.length, 2);
+        assert.equal(res.bids.length, 1);
         done();
       });
     });
