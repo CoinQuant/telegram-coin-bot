@@ -4,6 +4,32 @@ const assert = require('chai').assert;
 const moment = require('moment');
 
 describe('node-yunbi', () => {
+  describe('#signature', () => {
+    it('should return the right signature', done => {
+      const Yunbi = require('../index')('xxx', 'yyy');
+      const signature = Yunbi.signature('get', '/api/v2/markets', {
+        foo: 'bar',
+        tonce: 123456789
+      });
+      assert(
+        signature ===
+          'd93436fd9bf00afb778e52dc16d7b393960ba5711397b4dfcb7f66000e046c76'
+      );
+      done();
+    });
+    it('should throw error if method is unknown', done => {
+      const Yunbi = require('../index')('xxx', 'yyy');
+      try {
+        Yunbi.signature('get1', '/api/v2/markets', {
+          foo: 'bar',
+          tonce: 123456789
+        });
+      } catch (err) {
+        assert.equal(err.message, 'Invalid http method');
+      }
+      done();
+    });
+  });
   describe('#getMarkets', () => {
     it('should get markets list', done => {
       const Yunbi = require('../index')();
