@@ -1,7 +1,11 @@
 const Telegraf = require('telegraf');
 const _ = require('lodash');
 const moment = require('moment');
-const logger = require('./logger')('index');
+const logger = require('./utils/logger')('index');
+const {
+  EXCHANGE_FIXER_UPDATE,
+  MARKET_BITFINEX_UPDATE
+} = require('./utils/enums');
 
 let exchange_CNY_TO_USD = 0;
 
@@ -11,13 +15,25 @@ logger.info('start servering...');
 // ========== start exchange listener ==========
 // =============================================
 const exchangeEE = require('./datasources/exchange');
-exchangeEE.startListen();
+exchangeEE.startListening();
 exchangeEE.on('exchange_update', data => {
-  logger.debug(`update exchange_CNY_TO_USD to ${exchange_CNY_TO_USD}`);
   exchange_CNY_TO_USD = data;
+  logger.debug(`update exchange_CNY_TO_USD to ${exchange_CNY_TO_USD}`);
 });
 // =============================================
 // =========== end exchange listener ===========
+// =============================================
+
+// =============================================
+// ========== start bitfinex listener ==========
+// =============================================
+const bitfinexEE = require('./datasources/markets/bitfinex')();
+bitfinexEE.startListening();
+bitfinexEE.on(MARKET_BITFINEX_UPDATE, data => {
+  logger.debug(`lastest bitfinex data: ${JSON.stringify(data)}`);
+});
+// =============================================
+// =========== end bitfinex listener ===========
 // =============================================
 
 // const token = process.env.token;

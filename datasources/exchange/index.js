@@ -1,7 +1,11 @@
 const EE = require('events');
 const { request } = require('urllib');
 const _ = require('lodash');
-const logger = require('../../logger')('datasource', 'exchange/api.fixer.io');
+const logger = require('../../utils/logger')(
+  'datasource',
+  'exchange/api.fixer.io'
+);
+const { EXCHANGE_FIXER_UPDATE } = require('../../utils/enums');
 
 class ExchangeEvent extends EE {
   constructor(frequency) {
@@ -9,7 +13,7 @@ class ExchangeEvent extends EE {
     this.exchange_CNY_TO_USD = 0;
     this._requestFrequency = frequency || 30000;
   }
-  startListen() {
+  startListening() {
     setInterval(() => {
       request('http://api.fixer.io/latest?base=USD', { dataType: 'json' })
         .then(result => {
@@ -17,7 +21,7 @@ class ExchangeEvent extends EE {
           if (_.isNumber(exchange)) {
             logger.info(`exchange_CNY_TO_USD set to ${exchange}`);
             this.exchange_CNY_TO_USD = exchange;
-            this.emit('exchange_update', exchange);
+            this.emit(EXCHANGE_FIXER_UPDATE, exchange);
           } else
             logger.warn(
               `exchange value is invalid: ${JSON.stringify(result.data)}`

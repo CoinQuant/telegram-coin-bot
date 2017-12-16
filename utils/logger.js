@@ -10,13 +10,14 @@ class LoggerFactory {
     const identity = `${category}-${callee}`;
     let labeledInstance = this._instances.get(identity);
     if (!labeledInstance) {
-      const { timestamp, label, printf } = format;
+      const { printf } = format;
       labeledInstance = createLogger({
         label: callee,
         format: printf(info => {
-          return `${moment().format('YYYY-MM-DD hh:mm:ss.SSSSSS')} ${
-            info.level
-          } --- [${category}] ${callee}: ${info.message}`;
+          return `${moment().format('YYYY-MM-DD hh:mm:ss.SSS')} ${_.padEnd(
+            info.level,
+            7
+          )} --- [${category}] ${callee}: ${info.message}`;
         }),
         transports: [new transports.Console()]
       });
