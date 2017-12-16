@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "bitfinex-api-node": "git+ssh://git@github.com:destec/bitfinex-api-node",
+    "bitfinex-api-node": "^1.2.1",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
-    "telegraf": "^3.11.1",
+    "pako": "^1.0.6",
+    "telegraf": "^3.17.2",
     "urllib": "^2.25.0",
-    "winston": "^3.0.0-rc1"
+    "winston": "^3.0.0-rc1",
+    "ws": "^3.3.2"
   },
   "devDependencies": {},
   "scripts": {

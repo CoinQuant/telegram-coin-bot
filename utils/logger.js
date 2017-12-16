@@ -31,11 +31,12 @@ module.exports = (category, callee) => {
   if (category && !_.isEmpty(category))
     category = _.chain(category)
       .replace(' ', '')
-      .upperCase()
+      .toUpper()
       .value();
   if (callee && !_.isEmpty(callee))
     callee = _.chain(callee)
       .replace(' ', '.')
+      .toLower()
       .value();
   return new LoggerFactory(category, callee);
 };

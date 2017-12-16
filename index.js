@@ -4,7 +4,8 @@ const moment = require('moment');
 const logger = require('./utils/logger')('index');
 const {
   EXCHANGE_FIXER_UPDATE,
-  MARKET_BITFINEX_UPDATE
+  MARKET_BITFINEX_UPDATE,
+  MARKET_HUOBI_UPDATE
 } = require('./utils/enums');
 
 let exchange_CNY_TO_USD = 0;
@@ -14,12 +15,12 @@ logger.info('start servering...');
 // =============================================
 // ========== start exchange listener ==========
 // =============================================
-const exchangeEE = require('./datasources/exchange');
-exchangeEE.startListening();
-exchangeEE.on('exchange_update', data => {
-  exchange_CNY_TO_USD = data;
-  logger.debug(`update exchange_CNY_TO_USD to ${exchange_CNY_TO_USD}`);
-});
+// const exchangeEE = require('./datasources/exchange');
+// exchangeEE.startListening();
+// exchangeEE.on('exchange_update', data => {
+//   exchange_CNY_TO_USD = data;
+//   logger.debug(`update exchange_CNY_TO_USD to ${exchange_CNY_TO_USD}`);
+// });
 // =============================================
 // =========== end exchange listener ===========
 // =============================================
@@ -27,13 +28,27 @@ exchangeEE.on('exchange_update', data => {
 // =============================================
 // ========== start bitfinex listener ==========
 // =============================================
-const bitfinexEE = require('./datasources/markets/bitfinex')();
-bitfinexEE.startListening();
-bitfinexEE.on(MARKET_BITFINEX_UPDATE, data => {
-  logger.debug(`lastest bitfinex data: ${JSON.stringify(data)}`);
-});
+// const bitfinexEE = require('./datasources/markets/bitfinex')();
+// bitfinexEE.startListening();
+// bitfinexEE.on(MARKET_BITFINEX_UPDATE, data => {
+//   logger.debug(`lastest bitfinex data: ${JSON.stringify(data)}`);
+// });
 // =============================================
 // =========== end bitfinex listener ===========
+// =============================================
+
+// =============================================
+// =========== start huobi listener ============
+// =============================================
+const huobiEE = require('./datasources/markets/huobi')();
+const huobiStorage = new Map();
+huobiEE.startListening();
+huobiEE.on(MARKET_HUOBI_UPDATE, ({ pair, price }) => {
+  huobiStorage.set(pair, price);
+  logger.debug(`lastest huobi data: {${pair}: ${JSON.stringify(price)}}`);
+});
+// =============================================
+// ============ end huobi listener =============
 // =============================================
 
 // const token = process.env.token;
