@@ -15,12 +15,12 @@ logger.info('start servering...');
 // =============================================
 // ========== start exchange listener ==========
 // =============================================
-// const exchangeEE = require('./datasources/exchange');
-// exchangeEE.startListening();
-// exchangeEE.on('exchange_update', data => {
-//   exchange_CNY_TO_USD = data;
-//   logger.debug(`update exchange_CNY_TO_USD to ${exchange_CNY_TO_USD}`);
-// });
+const exchangeEE = require('./datasources/exchange');
+exchangeEE.startListening();
+exchangeEE.on('exchange_update', data => {
+  exchange_CNY_TO_USD = data;
+  logger.debug(`update exchange_CNY_TO_USD to ${exchange_CNY_TO_USD}`);
+});
 // =============================================
 // =========== end exchange listener ===========
 // =============================================
@@ -28,11 +28,13 @@ logger.info('start servering...');
 // =============================================
 // ========== start bitfinex listener ==========
 // =============================================
-// const bitfinexEE = require('./datasources/markets/bitfinex')();
-// bitfinexEE.startListening();
-// bitfinexEE.on(MARKET_BITFINEX_UPDATE, data => {
-//   logger.debug(`lastest bitfinex data: ${JSON.stringify(data)}`);
-// });
+const bitfinexEE = require('./datasources/markets/bitfinex')();
+const bitfinexStorage = new Map();
+bitfinexEE.startListening();
+bitfinexEE.on(MARKET_BITFINEX_UPDATE, data => {
+  bitfinexEE.set(pair, price);
+  logger.debug(`lastest bitfinex data: ${JSON.stringify(data)}`);
+});
 // =============================================
 // =========== end bitfinex listener ===========
 // =============================================
@@ -51,9 +53,9 @@ huobiEE.on(MARKET_HUOBI_UPDATE, ({ pair, price }) => {
 // ============ end huobi listener =============
 // =============================================
 
-// const token = process.env.token;
-// if (!token) throw new Error('token should be provided!');
-// const app = new Telegraf(token);
+const token = process.env.telegram_coin_bot_token;
+if (!token) throw new Error('token should be provided!');
+const bot = new Telegraf(token);
 
 // const candlesStore = new Map();
 
@@ -86,16 +88,20 @@ huobiEE.on(MARKET_HUOBI_UPDATE, ({ pair, price }) => {
 //   return result;
 // };
 
-// app.command('start', ({ from, reply }) => {
-//   return reply('Welcome!');
-// });
-// app.command('mkt', ({ from, message, reply }) => {
-//   const parameters = _.split(message.text, ' ');
-//   if (parameters && parameters.length > 1 && parameters[1]) {
-//     const coinName = `t${_.upperCase(parameters[1])}USD`;
-//     if (!_.includes(['tBTCUSD', 'tLTCUSD', 'tETHUSD', 'tXRPUSD'], coinName))
-//       return reply('并没有这个币, 要不 ICO 来一波？');
-//     else return reply(_processCandles(coinName));
-//   } else return reply(_processCandles());
-// });
-// app.startPolling();
+bot.start(ctx => {
+  return ctx.reply('Welcome to use Telegram Coin Bot!');
+});
+bot.command('mkt', ({ from, message, reply }) => {
+  const parameters = _.split(message.text, ' ');
+  if (parameters && parameters.length > 1 && parameters[1]) {
+    const bitfinexTick = bitfinexStorage.get(parameters[1]);
+    const huobiTick = huobiStorage.get(parameters[1]);
+    return reply(JSON.stringify(bitfinexTick) + JSON.stringify(huobiTick));
+  }
+  //   const coinName = `t${_.upperCase(parameters[1])}USD`;
+  //   if (!_.includes(['tBTCUSD', 'tLTCUSD', 'tETHUSD', 'tXRPUSD'], coinName))
+  //     return reply('并没有这个币, 要不 ICO 来一波？');
+  //   else return reply(_processCandles(coinName));
+  // } else return reply(_processCandles());
+});
+bot.startPolling();

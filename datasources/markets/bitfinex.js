@@ -35,7 +35,7 @@ class BitfinexEvent extends EE {
       logger.info('Subscription established', data);
     });
     bws.on('candles', (rawPair, rawData) => {
-      logger.info(`market data [${rawPair}] received`);
+      logger.debug(`market data [${rawPair}] received`);
       logger.debug(`market data [${rawPair}]: ${JSON.stringify(rawData)}`);
       if (!_.isArray(rawData)) {
         try {

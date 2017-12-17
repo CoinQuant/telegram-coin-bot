@@ -29,7 +29,7 @@ const _genMktSubscribeReq = symbol => {
 };
 
 const _filterTick = tick => {
-  return _.pick(tick, ['open', 'close', 'low', 'high']);
+  return _.pick(tick, ['open', 'close', 'low', 'high', 'vol']);
 };
 
 const _dataParser = (rawPair, data) => {
@@ -161,7 +161,7 @@ class HuobiEvent extends EE {
         // --------------------------
         if (_.get(data, 'ch') && _.get(data, 'tick')) {
           const [market, symbol, kline, freq] = _.split(_.get(data, 'ch'), '.');
-          logger.info(`market data [${symbol}_${freq}] received`);
+          logger.debug(`market data [${symbol}_${freq}] received`);
           let price = _filterTick(_.get(data, 'tick'));
           // update exchange for BTCUSDT
           if (symbol === 'btcusdt')
