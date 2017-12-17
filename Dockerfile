@@ -1,6 +1,6 @@
 FROM node:8.4.0-alpine
 
-MAINTAINER destec <catalyst.zhang@gmail.com>
+MAINTAINER destec <destecx@gmail.com>
 LABEL Description="TelegramCoinBot" Author="destec"
 
 USER root
