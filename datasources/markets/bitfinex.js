@@ -10,6 +10,7 @@ const _dataParser = (rawPair, rawData) => {
   } else {
     const pair = _.slice(rawPair, 1, rawPair.length - 3).join('');
     const data = _.omit(rawData, 'MTS');
+    logger.info(pair, data);
     return { [pair]: data };
   }
 };

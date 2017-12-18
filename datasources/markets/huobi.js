@@ -41,6 +41,7 @@ const _dataParser = (rawPair, data) => {
       : rawPair;
     pair = _.endsWith(pair, 'usdt') ? _.replace(pair, 'usdt', '') : pair;
     pair = _.toUpper(pair);
+    logger.info(pair, data);
     return { [pair]: data };
   }
 };
