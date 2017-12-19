@@ -1,4 +1,4 @@
-FROM node:8.4.0-alpine
+FROM node:8.9.3-alpine
 
 MAINTAINER destec <destecx@gmail.com>
 LABEL Description="TelegramCoinBot" Author="destec"
