@@ -57,51 +57,42 @@ const token = process.env.telegram_coin_bot_token;
 if (!token) throw new Error('token should be provided!');
 const bot = new Telegraf(token);
 
-// const candlesStore = new Map();
+const _serializeItem = (broker, tick) => {
+  let result = broker + '\n';
+  _.keys(data).forEach(key => {
+    if (exchange_CNY_TO_USD)
+      result += `${key}: ¥${(data[key] * exchange_CNY_TO_USD).toFixed(3)}\n`;
+    else result += `${key}: $${data[key]}\n`;
+  });
+  return result;
+};
 
-// const _processCandleItems = data => {
-//   let result = '';
-//   _.keys(data).forEach(key => {
-//     if (exchange_CNY_TO_USD)
-//       result += `${key}: ¥${(data[key] * exchange_CNY_TO_USD).toFixed(3)}\n`;
-//     else result += `${key}: $${data[key]}\n`;
-//   });
-//   return result;
-// };
-
-// const _processCandles = coinName => {
-//   let result = '';
-//   if (coinName) {
-//     const item = candlesStore.get(coinName);
-//     if (item) {
-//       result = _processCandleItems(item);
-//     } else result = '暂无行情';
-//   } else {
-//     if (candlesStore.size != 0) {
-//       candlesStore.forEach((value, key) => {
-//         const name = _.slice(key, 1, key.length).join('');
-//         const data = _.omit(value, 'MTS');
-//         result += `${name}:\n${_processCandleItems(data)}\n`;
-//       });
-//     } else result = '暂无行情';
-//   }
-//   return result;
-// };
+const _serializeResponseData = name => {
+  const bitfinexTick = bitfinexStorage.get(name);
+  const huobiTick = huobiStorage.get(name);
+  if (!_.isEmpty(bitfinexTick) && !_.isEmpty(huobiTick)) {
+    return '币名无效或行情数据无效，有效的币名列表请使用"/coins"命令查看';
+  }
+  let result = '';
+  if (!_.isEmpty(bitfinexTick))
+    result += _serializeItem('Bitfinex', bitfinexTick);
+  if (!_.isEmpty(huobiTick)) {
+    if (!_.isEmpty(result)) result += '--------------------\n';
+    result += _serializeItem('Huobi', huobiTick);
+  }
+  return result;
+};
 
 bot.start(ctx => {
   return ctx.reply('Welcome to use Telegram Coin Bot!');
 });
 bot.command('mkt', ({ from, message, reply }) => {
   const parameters = _.split(message.text, ' ');
-  if (parameters && parameters.length > 1 && parameters[1]) {
-    const bitfinexTick = bitfinexStorage.get(parameters[1]);
-    const huobiTick = huobiStorage.get(parameters[1]);
-    return reply(JSON.stringify(bitfinexTick) + JSON.stringify(huobiTick));
-  }
-  //   const coinName = `t${_.upperCase(parameters[1])}USD`;
-  //   if (!_.includes(['tBTCUSD', 'tLTCUSD', 'tETHUSD', 'tXRPUSD'], coinName))
-  //     return reply('并没有这个币, 要不 ICO 来一波？');
-  //   else return reply(_processCandles(coinName));
-  // } else return reply(_processCandles());
+  if (parameters && parameters.length > 1 && parameters[1])
+    return reply(_serializeResponseData(parameters[1]));
+  else
+    return reply(
+      '请输入需要查询的币名称，有效的币名列表请使用"/coins"命令查看'
+    );
 });
 bot.startPolling();
