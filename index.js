@@ -33,7 +33,7 @@ const bitfinexStorage = new Map();
 bitfinexEE.startListening();
 bitfinexEE.on(MARKET_BITFINEX_UPDATE, ({ pair, price }) => {
   bitfinexStorage.set(pair, price);
-  logger.info(`lastest bitfinex data: {${pair}: ${JSON.stringify(price)}}`);
+  logger.debug(`lastest bitfinex data: {${pair}: ${JSON.stringify(price)}}`);
 });
 // =============================================
 // =========== end bitfinex listener ===========
@@ -47,7 +47,7 @@ const huobiStorage = new Map();
 huobiEE.startListening();
 huobiEE.on(MARKET_HUOBI_UPDATE, ({ pair, price }) => {
   huobiStorage.set(pair, price);
-  logger.info(`lastest huobi data: {${pair}: ${JSON.stringify(price)}}`);
+  logger.debug(`lastest huobi data: {${pair}: ${JSON.stringify(price)}}`);
 });
 // =============================================
 // ============ end huobi listener =============

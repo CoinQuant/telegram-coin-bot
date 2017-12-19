@@ -4,14 +4,19 @@ const _ = require('lodash');
 const logger = require('../../utils/logger')('datasource', 'bitfinex');
 const { MARKET_BITFINEX_UPDATE } = require('../../utils/enums');
 
-const _dataParser = (rawPair, rawData) => {
-  if (!rawPair || !rawData) {
+const _dataParser = (rawPair, data) => {
+  if (!rawPair || !data) {
     throw Error('empty pair name or data');
   } else {
-    const pair = _.slice(rawPair, 1, rawPair.length - 3).join('');
-    const data = _.omit(rawData, 'MTS');
-    logger.info(pair, data);
-    return { [pair]: data };
+    const pair = _.chain(rawPair)
+      .split(':')
+      .last()
+      .slice(1, -3)
+      .join('')
+      .value();
+    const price = _.omit(data, 'MTS');
+    logger.info(`[${pair}]: ${JSON.stringify(price)}`);
+    return { pair, price };
   }
 };
 class BitfinexEvent extends EE {
