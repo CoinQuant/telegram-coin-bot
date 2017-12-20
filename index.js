@@ -95,4 +95,14 @@ bot.command('mkt', ({ from, message, reply }) => {
       '请输入需要查询的币名称，有效的币名列表请使用"/coins"命令查看'
     );
 });
+bot.command('coins', ({ from, message, reply }) => {
+  const bitfinexCoins = [...bitfinexStorage.keys()];
+  const huobiCoins = [...huobiStorage.keys()];
+  let msgPayload = 'BITFINEX:\n';
+  msgPayload += _.size(bitfinexCoins) ? bitfinexCoins.join(', ') : '暂无可用';
+  msgPayload += '\n';
+  msgPayload += 'HUOBI:\n';
+  msgPayload += _.size(huobiCoins) ? huobiCoins.join(', ') : '暂无可用';
+  return reply(msgPayload);
+});
 bot.startPolling();
