@@ -17,7 +17,7 @@ logger.info('start servering...');
 // =============================================
 const exchangeEE = require('./datasources/exchange');
 exchangeEE.startListening();
-exchangeEE.on('exchange_update', data => {
+exchangeEE.on(EXCHANGE_FIXER_UPDATE, data => {
   exchange_CNY_TO_USD = data;
   logger.debug(`update exchange_CNY_TO_USD to ${exchange_CNY_TO_USD}`);
 });

@@ -1,7 +1,7 @@
-FROM node:8.9.3-alpine
+FROM node:8-alpine
 
 MAINTAINER destec <destecx@gmail.com>
-LABEL Description="TelegramCoinBot" Author="destec"
+LABEL Description="Telegram Coin Bot" Author="destec"
 
 USER root
 ENV ENV production
@@ -11,7 +11,7 @@ COPY . /var/tcb
 RUN cd /var/tcb \
   && apk update \
   && apk upgrade \
-  && apk add --no-cache git
+  && apk add --no-cache git \
   && npm install --production
 
 CMD npm start
