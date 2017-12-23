@@ -5,7 +5,8 @@ const logger = require('./utils/logger')('index');
 const {
   EXCHANGE_FIXER_UPDATE,
   MARKET_BITFINEX_UPDATE,
-  MARKET_HUOBI_UPDATE
+  MARKET_HUOBI_UPDATE,
+  MSG_NOT_AVALID_COIN_NAME
 } = require('./utils/enums');
 
 let exchange_CNY_TO_USD = 0;
