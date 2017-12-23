@@ -3,10 +3,13 @@ const _ = require('lodash');
 const moment = require('moment');
 const logger = require('./utils/logger')('index');
 const {
+  BITFINEX,
+  HUOBI,
   EXCHANGE_FIXER_UPDATE,
   MARKET_BITFINEX_UPDATE,
   MARKET_HUOBI_UPDATE,
-  MSG_NOT_AVALID_COIN_NAME
+  MSG_NOT_AVALID_COIN_NAME,
+  MSG_NO_DATA
 } = require('./utils/enums');
 
 let exchange_CNY_TO_USD = 0;
@@ -72,14 +75,14 @@ const _serializeResponseData = name => {
   const bitfinexTick = bitfinexStorage.get(name);
   const huobiTick = huobiStorage.get(name);
   if (_.isEmpty(bitfinexTick) && _.isEmpty(huobiTick)) {
-    return '币名无效或行情数据无效，有效的币名列表请使用"/coins"命令查看';
+    return MSG_NOT_AVALID_COIN_NAME;
   }
   let result = '';
   if (!_.isEmpty(bitfinexTick))
-    result += _serializeItem('BITFINEX', bitfinexTick);
+    result += _serializeItem(BITFINEX, bitfinexTick);
   if (!_.isEmpty(huobiTick)) {
     if (!_.isEmpty(result)) result += '--------------------\n';
-    result += _serializeItem('HUOBI', huobiTick);
+    result += _serializeItem(HUOBI, huobiTick);
   }
   return result;
 };
@@ -91,19 +94,16 @@ bot.command('mkt', ({ from, message, reply }) => {
   const parameters = _.split(message.text, ' ');
   if (parameters && parameters.length > 1 && parameters[1])
     return reply(_serializeResponseData(_.toUpper(parameters[1])));
-  else
-    return reply(
-      '请输入需要查询的币名称，有效的币名列表请使用"/coins"命令查看'
-    );
+  else return reply(MSG_NOT_AVALID_COIN_NAME);
 });
 bot.command('coins', ({ from, message, reply }) => {
   const bitfinexCoins = [...bitfinexStorage.keys()];
   const huobiCoins = [...huobiStorage.keys()];
-  let msgPayload = 'BITFINEX:\n';
-  msgPayload += _.size(bitfinexCoins) ? bitfinexCoins.join(', ') : '暂无可用';
+  let msgPayload = `${BITFINEX}:\n`;
+  msgPayload += _.size(bitfinexCoins) ? bitfinexCoins.join(', ') : MSG_NO_DATA;
   msgPayload += '\n';
-  msgPayload += 'HUOBI:\n';
-  msgPayload += _.size(huobiCoins) ? huobiCoins.join(', ') : '暂无可用';
+  msgPayload += `${HUOBI}:\n`;
+  msgPayload += _.size(huobiCoins) ? huobiCoins.join(', ') : MSG_NO_DATA;
   return reply(msgPayload);
 });
 bot.startPolling();
